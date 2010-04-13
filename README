@@ -1,0 +1,6 @@
+= Instalação =
+Make
+
+= Instalação via web =
+ wget -o ~/.gnome2/nautilus-scripts/PORTAL_conversao_de_video http://www.frustrado.com.br/tmp/PORTAL_conversao_de_video; chmod a+x ~/.gnome2/nautilus-scripts/PORTAL_conversao_de_video
+
