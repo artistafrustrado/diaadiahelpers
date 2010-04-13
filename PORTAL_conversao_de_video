@@ -1,0 +1,70 @@
+#!/bin/bash
+
+ZENITY=/usr/bin/zenity 
+
+CAMINHO=$*
+ARQUIVO=$(basename $CAMINHO)
+
+EXTENSION=$(echo $ARQUIVO | sed -r 's#^*\.([a-zA-Z0-9]{1,5})$#\1#g')
+EXTENSION=`echo "$ARQUIVO" | cut -d'.' -f2 | tr A-Z a-z`
+
+convert_mp4()
+{
+	INPUT=$1
+	OUTPUT=$(echo $INPUT | sed -r "s#\.[A-Za-z0-9]{1,4}\$#.flv#g")
+	#ffmpeg -i $INPUT -ar 22050 -ab 56 -acodec libmp3lame -r 25 -f flv -b 400 -s 320x240 $OUTPUT
+	
+	$ZENITY --info --text="ffmpeg -i $INPUT -vcodec flv -f flv -r 29.97 -s 320x240 -aspect 4:3 -b 300kb -g 160 -cmp dct  -subcmp dct  -mbd 2 -flags +aic+cbp+mv0+mv4 -trellis 1 -ac 1 -ar 22050 -ab 56kb $OUTPUT"
+	ffmpeg -i $INPUT -vcodec flv -f flv -r 29.97 -s 320x240 -aspect 4:3 -b 300kb -g 160 -cmp dct  -subcmp dct  -mbd 2 -flags +aic+cbp+mv0+mv4 -trellis 1 -ac 1 -ar 22050 -ab 56kb $OUTPUT
+
+	OUTPUT=$(echo $INPUT | sed -r "s#\.[A-Za-z0-9]{1,4}\$#.avi#g")
+	ffmpeg -an -i $INPUT -sameq $OUTPUT
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato MP4. Foi convertido para FLV e AVI."	
+}
+
+convert_avi()
+{
+	INPUT=$1
+	OUTPUT=$(echo $INPUT | sed -r "s#\.[A-Za-z0-9]{1,4}\$#.flv#g")
+	#ffmpeg -i $INPUT -ar 22050 -ab 56 -acodec libmp3lame -r 25 -f flv -b 400 -s 320x240 $OUTPUT
+	
+	$ZENITY --info --text="ffmpeg -i $INPUT -vcodec flv -f flv -r 29.97 -s 320x240 -aspect 4:3 -b 300kb -g 160 -cmp dct  -subcmp dct  -mbd 2 -flags +aic+cbp+mv0+mv4 -trellis 1 -ac 1 -ar 22050 -ab 56kb $OUTPUT"
+	ffmpeg -i $INPUT -vcodec flv -f flv -r 29.97 -s 320x240 -aspect 4:3 -b 300kb -g 160 -cmp dct  -subcmp dct  -mbd 2 -flags +aic+cbp+mv0+mv4 -trellis 1 -ac 1 -ar 22050 -ab 56kb $OUTPUT
+	$ZENITY --info --text="Arquivo $ARQUIVO foi convertido para FLV."	
+}
+
+convert_flv()
+{
+	INPUT=$1
+	OUTPUT=$(echo $INPUT | sed -r "s#\.[A-Za-z0-9]{1,4}\$#.avi#g")
+	ffmpeg -i $INPUT -sameq -ab 56 -ar 22050 -b 500  $OUTPUT
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato FLV. Foi convertido para AVI."	
+}
+
+
+if [ $EXTENSION == "mp4" ]
+then
+	convert_mp4 $CAMINHO
+
+elif [ $EXTENSION == "avi" ]
+then
+	convert_avi $CAMINHO
+
+elif [ $EXTENSION == "mpg" ]
+then
+	convert_mp4 $CAMINHO
+
+elif [ $EXTENSION == "mpeg" ]
+then
+	convert_mp4 $CAMINHO
+
+elif [ $EXTENSION == "divx" ]
+then
+	convert_mp4 $CAMINHO
+
+elif [ $EXTENSION == "flv" ]
+then
+	convert_flv $CAMINHO
+fi
+
+
