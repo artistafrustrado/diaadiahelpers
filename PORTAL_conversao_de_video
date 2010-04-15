@@ -23,52 +23,39 @@ convert_to_flv()
 }
 
 
-convert_mp4()
-{
-	INPUT=$1
-    converto_to_flv $INPUT	
-    converto_to_avi $INPUT	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato MP4. Foi convertido para FLV e AVI."	
-}
-
-convert_avi()
-{
-	INPUT=$1
-    converto_to_flv $INPUT	
-	$ZENITY --info --text="Arquivo $ARQUIVO foi convertido para FLV."	
-}
-
-convert_flv()
-{
-	INPUT=$1
-    converto_to_avi $INPUT	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato FLV. Foi convertido para AVI."	
-}
-
-
 if [ $EXTENSION == "mp4" ]
 then
-	convert_mp4 $CAMINHO
+   convert_to_flv $CAMINHO	
+   convert_to_avi $CAMINHO	
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato MP4. Foi convertido para FLV e AVI."	
 
 elif [ $EXTENSION == "avi" ]
 then
-	convert_avi $CAMINHO
+   convert_to_flv $CAMINHO	
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato AVI. Foi convertido para FLV."	
 
 elif [ $EXTENSION == "mpg" ]
 then
-	convert_mp4 $CAMINHO
+   convert_to_flv $CAMINHO	
+   convert_to_avi $CAMINHO	
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato MPG. Foi convertido para FLV e AVI."	
 
 elif [ $EXTENSION == "mpeg" ]
 then
-	convert_mp4 $CAMINHO
+   convert_to_flv $CAMINHO	
+   convert_to_avi $CAMINHO	
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato MPEG. Foi convertido para FLV e AVI."	
 
 elif [ $EXTENSION == "divx" ]
 then
-	convert_mp4 $CAMINHO
+   convert_to_flv $CAMINHO	
+   convert_to_avi $CAMINHO	
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato DIVX. Foi convertido para FLV e AVI."	
 
 elif [ $EXTENSION == "flv" ]
 then
-	convert_flv $CAMINHO
+   convert_to_avi $CAMINHO	
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato FLV. Foi convertido para AVI."	
 fi
 
 
