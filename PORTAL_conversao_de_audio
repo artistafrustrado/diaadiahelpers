@@ -1,0 +1,32 @@
+#!/bin/bash
+
+ZENITY=/usr/bin/zenity 
+
+CAMINHO=$*
+ARQUIVO=$(basename $CAMINHO)
+
+EXTENSION=$(echo $ARQUIVO | sed -r 's#^*\.([a-zA-Z0-9]{1,5})$#\1#g')
+EXTENSION=`echo "$ARQUIVO" | cut -d'.' -f2 | tr A-Z a-z`
+
+convert_to_mp3()
+{
+	INPUT=$1
+	OUTPUT=$(echo $INPUT | sed -r "s#\.[A-Za-z0-9]{1,4}\$#.mp3#g")
+    ffmpeg -i $INPUT -vn -ar 44100 -ac 2 -ab 192 -f mp3 $OUTPUT
+}
+
+
+if [ $EXTENSION == "wma" ]
+then
+    convert_to_mp3 $CAMINHO	
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato WMA. Foi convertido para MP3."	
+
+elif [ $EXTENSION == "ogg" ]
+    convert_to_mp3 $CAMINHO	
+    $ZENITY --info --text="Arquivo $ARQUIVO é formato OGG. Foi convertido para MP3."	
+
+else
+	$ZENITY --info --text="Arquivo $ARQUIVO é formato DESCONHECIDO. Nenhuma conversão foi efetuada."	
+fi
+
+
