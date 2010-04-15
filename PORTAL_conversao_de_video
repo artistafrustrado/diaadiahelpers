@@ -12,7 +12,7 @@ convert_to_avi()
 {
 	INPUT=$1
 	OUTPUT=$(echo $INPUT | sed -r "s#\.[A-Za-z0-9]{1,4}\$#.avi#g")
-	ffmpeg -an -i $INPUT -sameq $OUTPUT
+    ffmpeg -i $INPUT -f avi -r 29.97 -vcodec libxvid -vtag XVID -s 640x480 -aspect 4:3 -maxrate 1800kb -b 1500kb -qmin 3 -qmax 5 -bufsize 4096 -mbd 2 -bf 2 -flags +4mv -trellis -aic -cmp 2 -subcmp 2 -g 300 -acodec libmp3lame -ar 48000 -ab 128kb -ac 2 $OUTPUT
 }
 
 convert_to_flv()
