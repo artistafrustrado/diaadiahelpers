@@ -14,7 +14,7 @@ avisar_conversao()
 
 FILES=$*
 
-avisar_conversao "Convertendo arquivos: $FILES"
+avisar_conversao "Extradindo áudio dos arquivos: $FILES"
 
 for CAMINHO in $FILES
 do
