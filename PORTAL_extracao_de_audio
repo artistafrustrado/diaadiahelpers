@@ -1,51 +1,58 @@
 #!/bin/bash
 
-ZENITY=/usr/bin/zenity 
-
-CAMINHO=$*
-ARQUIVO=$(basename $CAMINHO)
-
-EXTENSION=$(echo $ARQUIVO | sed -r 's#^*\.([a-zA-Z0-9]{1,5})$#\1#g')
-EXTENSION=`echo "$ARQUIVO" | cut -d'.' -f2 | tr A-Z a-z`
-
 convert_to_mp3()
 {
 	INPUT=$1
 	OUTPUT=$(echo $INPUT | sed -r "s#\.[A-Za-z0-9]{1,4}\$#.mp3#g")
-    ffmpeg -i $INPUT -vn -ar 44100 -ac 2 -ab 192 -f mp3 $OUTPUT
+    	ffmpeg -i $INPUT -vn -ar 44100 -ac 2 -ab 192 -f mp3 $OUTPUT
 }
 
+avisar_conversao()
+{
+	notify-send -t 20000 -u low -i gtk-dialog-info "$1" "$info"
+}
 
-if [ $EXTENSION == "mp4" ]
-then
-    convert_to_mp3 $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato MP4. O audio foi extraido para MP3."	
+FILES=$*
 
-elif [ $EXTENSION == "avi" ]
-then
-    convert_to_mp3 $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato AVI. O audio foi extraido para MP3."	
+avisar_conversao "Convertendo arquivos: $FILES"
 
-elif [ $EXTENSION == "mpg" ]
-then
-    convert_to_mp3 $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato MPG. O audio foi extraido para MP3."	
+for CAMINHO in $FILES
+do
+	ARQUIVO=$(basename $CAMINHO)
 
-elif [ $EXTENSION == "mpeg" ]
-then
-    convert_to_mp3 $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato MPEG. O audio foi extraido para MP3."	
-
-elif [ $EXTENSION == "divx" ]
-then
-    convert_to_mp3 $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato DIVX. O audio foi extraido para MP3."	
-
-elif [ $EXTENSION == "flv" ]
-then
-    convert_to_mp3 $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato FLV. O audio foi extraido para MP3."	
-
-fi
+	EXTENSION=$(echo $ARQUIVO | sed -r 's#^*\.([a-zA-Z0-9]{1,5})$#\1#g')
+	EXTENSION=`echo "$ARQUIVO" | cut -d'.' -f2 | tr A-Z a-z`
 
 
+	if [ $EXTENSION == "mp4" ]
+	then
+		convert_to_mp3 $CAMINHO	
+		avisar_conversao "Arquivo $ARQUIVO é formato MP4. O audio foi extraido para MP3."	
+
+	elif [ $EXTENSION == "avi" ]
+	then
+		convert_to_mp3 $CAMINHO	
+		avisar_conversao "Arquivo $ARQUIVO é formato AVI. O audio foi extraido para MP3."	
+
+	elif [ $EXTENSION == "mpg" ]
+	then
+		convert_to_mp3 $CAMINHO	
+		avisar_conversao "Arquivo $ARQUIVO é formato MPG. O audio foi extraido para MP3."	
+
+	elif [ $EXTENSION == "mpeg" ]
+	then
+		convert_to_mp3 $CAMINHO	
+		avisar_conversao "Arquivo $ARQUIVO é formato MPEG. O audio foi extraido para MP3."	
+
+	elif [ $EXTENSION == "divx" ]
+	then
+		convert_to_mp3 $CAMINHO	
+		avisar_conversao "Arquivo $ARQUIVO é formato DIVX. O audio foi extraido para MP3."	
+
+	elif [ $EXTENSION == "flv" ]
+	then
+		convert_to_mp3 $CAMINHO	
+		avisar_conversao "Arquivo $ARQUIVO é formato FLV. O audio foi extraido para MP3."	
+
+	fi
+done

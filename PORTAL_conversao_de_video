@@ -1,18 +1,10 @@
 #!/bin/bash
 
-ZENITY=/usr/bin/zenity 
-
-CAMINHO=$*
-ARQUIVO=$(basename $CAMINHO)
-
-EXTENSION=$(echo $ARQUIVO | sed -r 's#^*\.([a-zA-Z0-9]{1,5})$#\1#g')
-EXTENSION=`echo "$ARQUIVO" | cut -d'.' -f2 | tr A-Z a-z`
-
 convert_to_avi()
 {
 	INPUT=$1
 	OUTPUT=$(echo $INPUT | sed -r "s#\.[A-Za-z0-9]{1,4}\$#.avi#g")
-    ffmpeg -i $INPUT -f avi -r 29.97 -vcodec libxvid -vtag XVID -s 640x480 -aspect 4:3 -maxrate 1800kb -b 1500kb -qmin 3 -qmax 5 -bufsize 4096 -mbd 2 -bf 2 -flags +4mv -trellis -aic -cmp 2 -subcmp 2 -g 300 -acodec libmp3lame -ar 48000 -ab 128kb -ac 2 $OUTPUT
+    	ffmpeg -i $INPUT -f avi -r 29.97 -vcodec libxvid -vtag XVID -s 640x480 -aspect 4:3 -maxrate 1800kb -b 1500kb -qmin 3 -qmax 5 -bufsize 4096 -mbd 2 -bf 2 -flags +4mv -trellis -aic -cmp 2 -subcmp 2 -g 300 -acodec libmp3lame -ar 48000 -ab 128kb -ac 2 $OUTPUT
 }
 
 convert_to_flv()
@@ -22,40 +14,55 @@ convert_to_flv()
 	ffmpeg -i $INPUT -vcodec flv -f flv -r 29.97 -s 320x240 -aspect 4:3 -b 300kb -g 160 -cmp dct  -subcmp dct  -mbd 2 -flags +aic+cbp+mv0+mv4 -trellis 1 -ac 1 -ar 22050 -ab 56kb $OUTPUT
 }
 
+avisar_conversao()
+{
+	notify-send -t 20000 -u low -i gtk-dialog-info "$1" "$info"
+}
 
-if [ $EXTENSION == "mp4" ]
-then
-   convert_to_flv $CAMINHO	
-   convert_to_avi $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato MP4. Foi convertido para FLV e AVI."	
+FILES=$*
 
-elif [ $EXTENSION == "avi" ]
-then
-   convert_to_flv $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato AVI. Foi convertido para FLV."	
+avisar_conversao "Convertendo arquivos: $FILES"
 
-elif [ $EXTENSION == "mpg" ]
-then
-   convert_to_flv $CAMINHO	
-   convert_to_avi $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato MPG. Foi convertido para FLV e AVI."	
+for CAMINHO in $FILES
+do
+	ARQUIVO=$(basename $CAMINHO)
 
-elif [ $EXTENSION == "mpeg" ]
-then
-   convert_to_flv $CAMINHO	
-   convert_to_avi $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato MPEG. Foi convertido para FLV e AVI."	
-
-elif [ $EXTENSION == "divx" ]
-then
-   convert_to_flv $CAMINHO	
-   convert_to_avi $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato DIVX. Foi convertido para FLV e AVI."	
-
-elif [ $EXTENSION == "flv" ]
-then
-   convert_to_avi $CAMINHO	
-	$ZENITY --info --text="Arquivo $ARQUIVO é formato FLV. Foi convertido para AVI."	
-fi
+	EXTENSION=$(echo $ARQUIVO | sed -r 's#^*\.([a-zA-Z0-9]{1,5})$#\1#g')
+	EXTENSION=`echo "$ARQUIVO" | cut -d'.' -f2 | tr A-Z a-z`
 
 
+	if [ $EXTENSION == "mp4" ]
+	then
+	   convert_to_flv $CAMINHO	
+	   convert_to_avi $CAMINHO	
+	   avisar_conversao "Arquivo $ARQUIVO é formato MP4. Foi convertido para FLV e AVI."	
+
+	elif [ $EXTENSION == "avi" ]
+	then
+	   convert_to_flv $CAMINHO	
+	   avisar_conversao "Arquivo $ARQUIVO é formato AVI. Foi convertido para FLV."	
+
+	elif [ $EXTENSION == "mpg" ]
+	then
+	   convert_to_flv $CAMINHO	
+	   convert_to_avi $CAMINHO	
+	   avisar_conversao "Arquivo $ARQUIVO é formato MPG. Foi convertido para FLV e AVI."	
+
+	elif [ $EXTENSION == "mpeg" ]
+	then
+	   convert_to_flv $CAMINHO	
+	   convert_to_avi $CAMINHO	
+	   avisar_conversao "Arquivo $ARQUIVO é formato MPEG. Foi convertido para FLV e AVI."	
+
+	elif [ $EXTENSION == "divx" ]
+	then
+	   convert_to_flv $CAMINHO	
+	   convert_to_avi $CAMINHO	
+	   avisar_conversao "Arquivo $ARQUIVO é formato DIVX. Foi convertido para FLV e AVI."	
+
+	elif [ $EXTENSION == "flv" ]
+	then
+	   convert_to_avi $CAMINHO	
+	   avisar_conversao "Arquivo $ARQUIVO é formato FLV. Foi convertido para AVI."	
+	fi
+done
