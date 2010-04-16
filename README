@@ -1,3 +1,7 @@
+= Dependências =
+* ffmpeg
+* libnotify-bin
+
 = Instalação =
 Make
 
