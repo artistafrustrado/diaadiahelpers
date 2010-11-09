@@ -7,6 +7,6 @@ Make
 
 = Instalação via web =
 
-wget -O /tmp/install.sh http://github.com/artistafrustrado/diaadiahelpers/raw/master/install.sh; bash /tmp/install.sh
+wget --no-check-certificate -O /tmp/install.sh http://github.com/artistafrustrado/diaadiahelpers/raw/master/install.sh; bash /tmp/install.sh
 
 
