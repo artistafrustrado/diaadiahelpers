@@ -1,4 +1,5 @@
 all:
+	mkdir -p ~/.gnome2/nautilus-scripts/
 	cp PORTAL_conversao_de_video ~/.gnome2/nautilus-scripts/
 	cp PORTAL_Testar_video ~/.gnome2/nautilus-scripts/
 	chmod a+x ~/.gnome2/nautilus-scripts/*
